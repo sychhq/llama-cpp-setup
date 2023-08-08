@@ -4,11 +4,23 @@
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Prompt the user for the Repository ID (e.g., TheBloke/Llama-2-13B-chat-GGML)
-echo -e "${BLUE}Please enter the Repository ID (e.g., TheBloke/Llama-2-13B-chat-GGML):${NC}"
+# Default values
+DEFAULT_REPO_ID="TheBloke/Llama-2-7B-chat-GGML"
+DEFAULT_FILE="llama-2-7b-chat.ggmlv3.q4_0.bin"
+
+# Prompt the user for the Repository ID and use default if empty
+echo -e "${BLUE}Please enter the Repository ID (default: ${DEFAULT_REPO_ID}):${NC}"
 read REPO_ID
-echo -e "${BLUE}Please enter the corresponding file name (e.g., llama-2-13b-chat.ggmlv3.q4_0.bin):${NC}"
+if [ -z "$REPO_ID" ]; then
+    REPO_ID=${DEFAULT_REPO_ID}
+fi
+
+# Prompt the user for the file name and use default if empty
+echo -e "${BLUE}Please enter the corresponding file name (default: ${DEFAULT_FILE}):${NC}"
 read FILE
+if [ -z "$FILE" ]; then
+    FILE=${DEFAULT_FILE}
+fi
 
 # Clone the Llama.cpp repository
 git clone https://github.com/ggerganov/llama.cpp.git
