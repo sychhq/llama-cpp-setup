@@ -18,14 +18,14 @@ This package allows you to quickly set up and run the Llama 2 large language mod
 
 4. Run the script: `./setup.sh`
 
-5. Follow the on-screen prompts: The script will ask for the Model's Repository ID and the corresponding file you wish to download and run.
+5. Follow the on-screen prompts: The script will ask for the Model's Repository ID and the corresponding file you wish to download and run. **Note** that if no user input is provided the default repository id is `TheBloke/Llama-2-7B-chat-GGML` and the default corresponding file name is `llama-2-7b-chat.ggmlv3.q4_0.bin`.
 
 ## Usage Example
 
 ```
-Please enter the Repository ID (e.g., TheBloke/Llama-2-13B-chat-GGML):
+Please enter the Repository ID (default: TheBloke/Llama-2-7B-chat-GGML):
 > TheBloke/Llama-2-13B-chat-GGML
-Please enter the corresponding file name (e.g., llama-2-13b-chat.ggmlv3.q4_0.bin):
+Please enter the corresponding file name (default: llama-2-7b-chat.ggmlv3.q4_0.bin):
 >llama-2-13b-chat.ggmlv3.q4_0.bin
 
 ...some setup output...
@@ -37,8 +37,11 @@ Please enter the corresponding file name (e.g., llama-2-13b-chat.ggmlv3.q4_0.bin
  - If you want to submit another line, end your input with '\'.
 
 
-> Hi!
-Hello! How can I help you today?
+> Hi
+Hey! How are you?
+
+> Who is the founder of Facebook?
+Mark Zuckerberg is the founder of Facebook.
 
 >
 ```
