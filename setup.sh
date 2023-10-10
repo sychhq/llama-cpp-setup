@@ -5,8 +5,11 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Default values
-DEFAULT_REPO_ID="TheBloke/Llama-2-7B-chat-GGML"
-DEFAULT_FILE="llama-2-7b-chat.ggmlv3.q4_0.bin"
+# As of August 27, 2023, GGML is no longer supported.
+# DEFAULT_REPO_ID="TheBloke/Llama-2-7B-chat-GGML"
+# DEFAULT_FILE="llama-2-7b-chat.ggmlv3.q4_0.bin"
+DEFAULT_REPO_ID="TheBloke/Llama-2-7B-Chat-GGUF"
+DEFAULT_FILE="llama-2-7b-chat.Q3_K_L.gguf"
 
 # Prompt the user for the Repository ID and use default if empty
 echo -e "${BLUE}Please enter the Repository ID (default: ${DEFAULT_REPO_ID}):${NC}"
@@ -23,14 +26,25 @@ if [ -z "$FILE" ]; then
 fi
 
 # Clone the Llama.cpp repository
-git clone https://github.com/ggerganov/llama.cpp.git
-cd llama.cpp
+if ! [ -e "llama.cpp" ]; then
+    echo "Cloning llama.cpp repo..."
+    git clone https://github.com/ggerganov/llama.cpp.git
+fi
+cd llama.cpp || return
 
-# If on an M1/M2 Mac, build with GPU support
+# Build GPU support if avail
+echo "Running make..."
 if [[ $(uname -m) == "arm64" ]]; then
+    echo " - Thinking different. (Build for M1/M2 Mac.)"
     LLAMA_METAL=1 make
+    N_GPU_LAYERS=32
+elif nvidia-smi &> /dev/null; then
+    echo " - Nvidia found. Building w/CUBLAS support."
+    LLAMA_CUBLAS=1 make
+    N_GPU_LAYERS=32
 else
     make
+    N_GPU_LAYERS=0
 fi
 
 # Check for the model and download if not present
@@ -48,4 +62,5 @@ PROMPT="Hello! Need any assistance?"
   --top_k 10000 \
   --temp 0.2 \
   --repeat_penalty 1.1 \
-  -t 8
+  -t 8 \
+  -n-gpu-layers ${N_GPU_LAYERS}
